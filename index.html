@@ -91,17 +91,17 @@
             text-shadow: 
                 0 0 10px #00ff00,
                 0 0 20px #00ff00;
-            animation: glitch 3s infinite;
+            animation: glitch 5s infinite;
             position: relative;
         }
         
         @keyframes glitch {
             0% { transform: translate(0); }
-            1% { transform: translate(-2px, 2px); }
-            2% { transform: translate(-2px, -2px); }
-            3% { transform: translate(2px, 2px); }
-            4% { transform: translate(2px, -2px); }
-            5% { transform: translate(0); }
+            95% { transform: translate(0); }
+            96% { transform: translate(-2px, 2px); }
+            97% { transform: translate(-2px, -2px); }
+            98% { transform: translate(2px, 2px); }
+            99% { transform: translate(2px, -2px); }
             100% { transform: translate(0); }
         }
         
@@ -149,7 +149,7 @@
                 rgba(0, 255, 0, 0.1) 50%, 
                 transparent 70%);
             z-index: 0;
-            animation: shine 5s infinite linear;
+            animation: shine 8s infinite linear;
         }
         
         @keyframes shine {
@@ -223,12 +223,12 @@
         }
         
         .blink {
-            animation: blink 1s infinite;
+            animation: blink 2s infinite;
         }
         
         @keyframes blink {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+            50% { opacity: 0.7; }
         }
         
         .footer {
@@ -245,7 +245,7 @@
             height: 20px;
             background-color: #00ff00;
             margin-left: 5px;
-            animation: cursor-blink 1s infinite;
+            animation: cursor-blink 1.2s infinite;
             vertical-align: middle;
         }
         
@@ -257,7 +257,7 @@
         /* Segment7 font for digital display */
         @font-face {
             font-family: 'Segment7Standard';
-            src: url('https://cdn.rawgit.com/divyanshuagrawal/segment7-font/master/Segment7Standard.otf') format('opentype');
+            src: url('https://fonts.cdnfonts.com/s/19595/Seven Segment.woff') format('woff');
             font-weight: normal;
             font-style: italic;
         }
@@ -354,7 +354,7 @@
         </div>
         
         <div class="footer" id="footer">
-            [v1.0.3] :: TERMINAL READY
+            [v1.0.3] :: TERMINAL READY :: SILENT MODE
         </div>
     </div>
 
@@ -374,29 +374,6 @@
         const millisecondsElement = document.getElementById('milliseconds');
         const statusElement = document.getElementById('status');
         const footerElement = document.getElementById('footer');
-        
-        // Dźwięki retro (tylko z interakcją użytkownika)
-        function playBeep(frequency, duration) {
-            try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.value = frequency;
-                oscillator.type = 'sine';
-                
-                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
-                
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(aContext.currentTime + duration);
-            } catch (e) {
-                // Ignoruj błędy audio
-            }
-        }
         
         // Funkcja formatująca liczby do dwóch cyfr
         function formatNumber(num) {
@@ -426,6 +403,7 @@
         
         let lastSecond = -1;
         let messageIndex = 0;
+        let glitchEffect = false;
         
         // Funkcja aktualizująca zegar
         function updateCountdown() {
@@ -444,11 +422,13 @@
                 statusElement.textContent = "SEQUENCE COMPLETE :: INITIATING REDIRECT";
                 statusElement.classList.remove('blink');
                 statusElement.style.color = '#ffff00';
+                statusElement.style.textShadow = '0 0 10px #ffff00';
                 
                 footerElement.textContent = "[SYSTEM OVERRIDE] :: REDIRECTING...";
                 
                 // Efekt końcowy
                 document.querySelector('.title').textContent = "MISSION ACCOMPLISHED";
+                document.querySelector('.cursor').style.display = 'none';
                 
                 // Przekieruj po 3 sekundach
                 setTimeout(() => {
@@ -472,20 +452,31 @@
             secondsElement.textContent = formatNumber(seconds);
             millisecondsElement.textContent = formatMilliseconds(milliseconds);
             
-            // Zmień komunikat statusu co 5 sekund
+            // Zmień komunikat statusu co 10 sekund
             const currentSecond = Math.floor(now.getTime() / 1000);
-            if (currentSecond !== lastSecond && currentSecond % 5 === 0) {
+            if (currentSecond !== lastSecond && currentSecond % 10 === 0) {
                 statusElement.textContent = statusMessages[messageIndex];
                 messageIndex = (messageIndex + 1) % statusMessages.length;
                 lastSecond = currentSecond;
+                
+                // Efekt glitch co zmianę komunikatu
+                if (!glitchEffect) {
+                    glitchEffect = true;
+                    statusElement.style.transform = 'translate(2px, -2px)';
+                    statusElement.style.color = '#ff00ff';
+                    setTimeout(() => {
+                        statusElement.style.transform = 'translate(0, 0)';
+                        statusElement.style.color = '#80ff80';
+                        glitchEffect = false;
+                    }, 100);
+                }
             }
             
-            // Efekt dźwiękowy przy zmianie sekundy (tylko po interakcji użytkownika)
-            if (seconds !== lastSecond && document.hidden === false) {
-                // Minimalny dźwięk - aktywowany tylko po interakcji
-                if (window.userInteracted) {
-                    playBeep(800, 0.05);
-                }
+            // Efekt migania milisekund co 500ms
+            if (milliseconds < 500) {
+                millisecondsElement.style.opacity = '0.9';
+            } else {
+                millisecondsElement.style.opacity = '1';
             }
         }
         
@@ -495,41 +486,51 @@
         // Inicjalne uruchomienie
         updateCountdown();
         
-        // Interakcja użytkownika dla dźwięku
-        let userInteracted = false;
-        window.userInteracted = false;
-        
-        function enableSound() {
-            userInteracted = true;
-            window.userInteracted = true;
-            document.removeEventListener('click', enableSound);
-            document.removeEventListener('keydown', enableSound);
-            document.removeEventListener('touchstart', enableSound);
-        }
-        
-        document.addEventListener('click', enableSound);
-        document.addEventListener('keydown', enableSound);
-        document.addEventListener('touchstart', enableSound);
-        
-        // Efekt pisania w tytule
-        const titleElement = document.querySelector('.title');
-        const originalTitle = "SYSTEM COUNTDOWN";
-        let titleChars = originalTitle.split('');
-        
-        // Losowe miganie cyfr (efekt retro)
+        // Efekt losowego migania cyfr (tylko wizualny, bez dźwięku)
         setInterval(() => {
-            if (Math.random() > 0.7) {
+            if (Math.random() > 0.8) {
                 const timeValues = document.querySelectorAll('.time-value');
                 const randomIndex = Math.floor(Math.random() * timeValues.length);
                 const originalValue = timeValues[randomIndex].textContent;
                 
                 // Krótkie "miganie" cyfry
-                timeValues[randomIndex].style.opacity = '0.5';
+                timeValues[randomIndex].style.opacity = '0.6';
+                timeValues[randomIndex].style.color = '#ff5555';
+                
                 setTimeout(() => {
                     timeValues[randomIndex].style.opacity = '1';
+                    timeValues[randomIndex].style.color = '#00ff00';
+                }, 80);
+            }
+            
+            // Losowy efekt glitch na tytule
+            if (Math.random() > 0.9) {
+                const title = document.querySelector('.title');
+                title.style.letterSpacing = '8px';
+                title.style.color = '#ff00ff';
+                
+                setTimeout(() => {
+                    title.style.letterSpacing = '6px';
+                    title.style.color = '#00ff00';
                 }, 50);
             }
-        }, 300);
+        }, 500);
+        
+        // Efekt pisania w subtitle
+        const subtitleElement = document.querySelector('.subtitle');
+        const originalSubtitle = "INITIALIZING SEQUENCE...";
+        let subtitleIndex = 0;
+        
+        function typeSubtitle() {
+            if (subtitleIndex < originalSubtitle.length) {
+                subtitleElement.textContent = originalSubtitle.substring(0, subtitleIndex + 1);
+                subtitleIndex++;
+                setTimeout(typeSubtitle, 50);
+            }
+        }
+        
+        // Rozpocznij efekt pisania po załadowaniu
+        setTimeout(typeSubtitle, 1000);
     </script>
 </body>
 </html>
