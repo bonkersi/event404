@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown</title>
+    <title></title>
     <style>
         * {
             margin: 0;
@@ -17,233 +17,270 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Courier New', monospace;
             padding: 10px;
             overflow: hidden;
         }
         
-        .clock-container {
-            width: 100%;
-            text-align: center;
-            padding: 5px;
+        .budzik {
+            width: auto;
+            max-width: 95%;
+            background: #111111;
+            border: 10px solid #222222;
+            border-radius: 12px;
+            padding: 18px 22px;
+            position: relative;
+            box-shadow: 
+                0 0 0 1px #2a2a2a,
+                0 8px 25px rgba(0,0,0,0.7),
+                inset 0 0 20px rgba(0,0,0,0.8);
         }
         
-        .digital-display {
-            display: inline-block;
-            font-family: 'Courier New', monospace;
-            font-size: clamp(3.5rem, 11vw, 9rem);
-            font-weight: 900;
+        .ekran {
+            background: #000000;
+            border: 6px solid #1a1a1a;
+            border-radius: 6px;
+            padding: 15px 18px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                inset 0 0 30px rgba(0,0,0,0.9),
+                0 0 0 1px #333333;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .ekran::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 100% 3px;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+        
+        .cyfry {
+            font-family: 'Digital-7', 'Courier New', monospace;
+            font-size: clamp(3rem, 12vw, 8rem);
+            font-weight: normal;
+            font-style: italic;
             color: #ffffff;
-            letter-spacing: clamp(4px, 1.5vw, 15px);
+            letter-spacing: clamp(4px, 2vw, 16px);
             line-height: 1;
             white-space: nowrap;
             text-shadow: 
-                0 0 8px #ffffff,
-                0 0 16px #ffffff,
-                0 0 24px #ffffff;
-            padding: 15px 20px;
-            background: #111111;
-            border: 6px solid #222222;
-            border-radius: 8px;
+                0 0 3px #ffffff,
+                0 0 5px rgba(255,255,255,0.3);
             position: relative;
-            box-shadow: 
-                inset 0 0 30px rgba(0, 0, 0, 0.9),
-                0 0 40px rgba(255, 255, 255, 0.1);
-            min-width: min-content;
         }
         
-        .time-part {
+        .cyfra {
             display: inline-block;
-            min-width: 2.5ch;
+            position: relative;
+            min-width: 1.2em;
             text-align: center;
-            position: relative;
-            font-style: italic;
         }
         
-        .separator {
-            color: #ffffff;
-            animation: blink 1s infinite;
-            margin: 0 clamp(3px, 0.8vw, 10px);
-            position: relative;
-            top: -2px;
-            font-weight: bold;
-            opacity: 0.9;
-        }
-        
-        .dot {
-            color: #ffffff;
-            margin: 0 3px;
-            position: relative;
-            top: -12px;
-            font-size: 0.6em;
-            opacity: 0.9;
-        }
-        
-        .milliseconds {
-            font-size: 0.45em;
-            color: #ffffff;
-            margin-left: 5px;
-            text-shadow: 
-                0 0 5px #ffffff,
-                0 0 10px #ffffff;
-            letter-spacing: clamp(2px, 0.8vw, 8px);
-            position: relative;
-            top: -20px;
-            opacity: 0.9;
-        }
-        
-        @keyframes blink {
-            0%, 100% { opacity: 0.9; }
-            50% { opacity: 0.3; }
-        }
-        
-        @keyframes flicker {
-            0%, 100% { 
-                opacity: 1;
-                text-shadow: 
-                    0 0 8px #ffffff,
-                    0 0 16px #ffffff;
-            }
-            95% { 
-                opacity: 0.98;
-                text-shadow: 
-                    0 0 6px #ffffff,
-                    0 0 12px #ffffff;
-            }
-        }
-        
-        .digital-display {
-            animation: flicker 0.8s infinite;
-        }
-        
-        .time-part::after {
+        .cyfra::after {
             content: '';
             position: absolute;
             top: 1px;
             left: 1px;
             right: 1px;
             bottom: 1px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255,255,255,0.1);
             pointer-events: none;
         }
         
+        .dwukropek {
+            color: #ffffff;
+            margin: 0 clamp(3px, 1vw, 10px);
+            position: relative;
+            top: -3px;
+            animation: miganie 1s infinite;
+            font-weight: bold;
+            opacity: 0.8;
+        }
+        
+        .kropka {
+            color: #ffffff;
+            margin: 0 3px;
+            position: relative;
+            top: -12px;
+            font-size: 0.5em;
+            animation: miganie 1s infinite;
+            opacity: 0.8;
+        }
+        
+        .milisekundy {
+            font-size: 0.35em;
+            color: #f0f0f0;
+            margin-left: 5px;
+            letter-spacing: clamp(2px, 0.8vw, 6px);
+            position: relative;
+            top: -20px;
+            text-shadow: 
+                0 0 2px #f0f0f0;
+        }
+        
+        @keyframes miganie {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.3; }
+        }
+        
+        @keyframes drganie {
+            0%, 100% { 
+                opacity: 1;
+            }
+            95% { 
+                opacity: 0.98;
+            }
+        }
+        
+        .cyfry {
+            animation: drganie 0.8s infinite;
+        }
+        
         @media (max-width: 768px) {
-            .digital-display {
-                font-size: clamp(2.8rem, 9vw, 7rem);
-                padding: 12px 16px;
+            .budzik {
+                padding: 15px 18px;
+                border-width: 8px;
+            }
+            
+            .ekran {
+                padding: 12px 15px;
                 border-width: 5px;
+                min-height: 85px;
             }
             
-            .separator {
-                margin: 0 2px;
-                top: -1px;
+            .cyfry {
+                font-size: clamp(2.5rem, 10vw, 6rem);
             }
             
-            .milliseconds {
+            .milisekundy {
                 top: -16px;
-                letter-spacing: 3px;
             }
             
-            .dot {
+            .kropka {
                 top: -10px;
             }
         }
         
         @media (max-width: 480px) {
-            body {
-                padding: 5px;
+            .budzik {
+                padding: 12px 15px;
+                border-width: 6px;
+                border-radius: 10px;
             }
             
-            .digital-display {
-                font-size: clamp(2.2rem, 8vw, 5rem);
+            .ekran {
                 padding: 10px 12px;
                 border-width: 4px;
+                min-height: 75px;
             }
             
-            .separator {
-                margin: 0 1px;
-                letter-spacing: 1px;
-                top: 0;
+            .cyfry {
+                font-size: clamp(2rem, 9vw, 4.5rem);
+                letter-spacing: 3px;
             }
             
-            .milliseconds {
-                font-size: 0.4em;
-                top: -12px;
-                letter-spacing: 2px;
+            .milisekundy {
+                font-size: 0.3em;
+                top: -14px;
             }
             
-            .dot {
+            .kropka {
                 top: -8px;
-                font-size: 0.5em;
+                font-size: 0.4em;
+            }
+            
+            .dwukropek {
+                top: -2px;
             }
         }
         
         @media (max-width: 360px) {
-            .digital-display {
-                font-size: clamp(1.8rem, 7vw, 4rem);
+            .budzik {
+                padding: 10px 12px;
+                border-width: 5px;
+            }
+            
+            .ekran {
                 padding: 8px 10px;
-                border-width: 3px;
+                min-height: 65px;
             }
             
-            .time-part {
-                min-width: 2ch;
+            .cyfry {
+                font-size: clamp(1.7rem, 8vw, 3.5rem);
             }
             
-            .milliseconds {
-                top: -10px;
-                letter-spacing: 1px;
+            .cyfra {
+                min-width: 1em;
             }
             
-            .dot {
+            .milisekundy {
+                top: -12px;
+            }
+            
+            .kropka {
                 top: -6px;
             }
         }
         
         @media (min-width: 1400px) {
-            .digital-display {
-                font-size: 10rem;
-                padding: 20px 25px;
-                border-width: 8px;
+            .budzik {
+                padding: 22px 28px;
+                border-width: 12px;
             }
             
-            .milliseconds {
+            .ekran {
+                padding: 18px 22px;
+                min-height: 130px;
+            }
+            
+            .cyfry {
+                font-size: 8.5rem;
+            }
+            
+            .milisekundy {
                 top: -25px;
             }
             
-            .dot {
+            .kropka {
                 top: -15px;
-                font-size: 0.7em;
-            }
-        }
-        
-        @media (orientation: landscape) and (max-height: 600px) {
-            .digital-display {
-                font-size: clamp(2rem, 6vw, 4rem);
-                padding: 8px 10px;
-            }
-            
-            .milliseconds {
-                top: -10px;
-            }
-            
-            .dot {
-                top: -6px;
             }
         }
     </style>
+    <link href="https://fonts.cdnfonts.com/css/digital-7" rel="stylesheet">
 </head>
 <body>
-    <div class="clock-container">
-        <div class="digital-display">
-            <span class="time-part" id="days">00</span>
-            <span class="separator">:</span>
-            <span class="time-part" id="hours">00</span>
-            <span class="separator">:</span>
-            <span class="time-part" id="minutes">00</span>
-            <span class="separator">:</span>
-            <span class="time-part" id="seconds">00</span>
-            <span class="dot">.</span>
-            <span class="milliseconds" id="milliseconds">000</span>
+    <div class="budzik">
+        <div class="ekran">
+            <div class="cyfry">
+                <span class="cyfra" id="d1">0</span>
+                <span class="cyfra" id="d2">0</span>
+                <span class="dwukropek">:</span>
+                <span class="cyfra" id="h1">0</span>
+                <span class="cyfra" id="h2">0</span>
+                <span class="dwukropek">:</span>
+                <span class="cyfra" id="m1">0</span>
+                <span class="cyfra" id="m2">0</span>
+                <span class="dwukropek">:</span>
+                <span class="cyfra" id="s1">0</span>
+                <span class="cyfra" id="s2">0</span>
+                <span class="kropka">.</span>
+                <span class="milisekundy">
+                    <span class="cyfra" id="ms1">0</span>
+                    <span class="cyfra" id="ms2">0</span>
+                    <span class="cyfra" id="ms3">0</span>
+                </span>
+            </div>
         </div>
     </div>
 
@@ -252,44 +289,18 @@
         targetDate.setDate(targetDate.getDate() + 14);
         targetDate.setHours(23, 59, 59, 999);
         
-        const daysElement = document.getElementById('days');
-        const hoursElement = document.getElementById('hours');
-        const minutesElement = document.getElementById('minutes');
-        const secondsElement = document.getElementById('seconds');
-        const millisecondsElement = document.getElementById('milliseconds');
-        const display = document.querySelector('.digital-display');
-        
-        function formatNumber(num) {
-            return num < 10 ? '0' + num : num;
-        }
-        
-        function formatMilliseconds(num) {
-            if (num < 10) return '00' + num;
-            if (num < 100) return '0' + num;
-            return num;
-        }
-        
-        function updateCountdown() {
+        function updateClock() {
             const now = new Date();
             const timeLeft = targetDate.getTime() - now.getTime();
             
             if (timeLeft <= 0) {
-                clearInterval(countdownInterval);
-                
-                daysElement.textContent = '00';
-                hoursElement.textContent = '00';
-                minutesElement.textContent = '00';
-                secondsElement.textContent = '00';
-                millisecondsElement.textContent = '000';
-                
-                display.style.color = '#ff0000';
-                display.style.textShadow = '0 0 10px #ff0000, 0 0 20px #ff0000';
-                display.style.animation = 'none';
-                
+                clearInterval(timer);
+                setAllDigits('0');
+                document.querySelector('.cyfry').style.color = '#ff0000';
+                document.querySelector('.cyfry').style.textShadow = '0 0 3px #ff0000';
                 setTimeout(() => {
                     window.location.href = 'https://bonkersi.github.io/BialaJaskolka.pl/index.html';
                 }, 3000);
-                
                 return;
             }
             
@@ -299,66 +310,59 @@
             const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
             const milliseconds = Math.floor(timeLeft % 1000);
             
-            daysElement.textContent = formatNumber(days);
-            hoursElement.textContent = formatNumber(hours);
-            minutesElement.textContent = formatNumber(minutes);
-            secondsElement.textContent = formatNumber(seconds);
-            millisecondsElement.textContent = formatMilliseconds(milliseconds);
+            const daysStr = days.toString().padStart(2, '0');
+            const hoursStr = hours.toString().padStart(2, '0');
+            const minutesStr = minutes.toString().padStart(2, '0');
+            const secondsStr = seconds.toString().padStart(2, '0');
+            const msStr = milliseconds.toString().padStart(3, '0');
             
-            const separators = document.querySelectorAll('.separator');
-            if (seconds % 2 === 0) {
-                separators.forEach(sep => {
-                    sep.style.opacity = '0.9';
-                });
-            } else {
-                separators.forEach(sep => {
-                    sep.style.opacity = '0.3';
-                });
-            }
-            
-            millisecondsElement.style.opacity = (milliseconds % 200 < 100) ? '0.8' : '1';
+            document.getElementById('d1').textContent = daysStr[0];
+            document.getElementById('d2').textContent = daysStr[1];
+            document.getElementById('h1').textContent = hoursStr[0];
+            document.getElementById('h2').textContent = hoursStr[1];
+            document.getElementById('m1').textContent = minutesStr[0];
+            document.getElementById('m2').textContent = minutesStr[1];
+            document.getElementById('s1').textContent = secondsStr[0];
+            document.getElementById('s2').textContent = secondsStr[1];
+            document.getElementById('ms1').textContent = msStr[0];
+            document.getElementById('ms2').textContent = msStr[1];
+            document.getElementById('ms3').textContent = msStr[2];
         }
         
-        let countdownInterval;
-        
-        function startCountdown() {
-            if (countdownInterval) clearInterval(countdownInterval);
-            countdownInterval = setInterval(updateCountdown, 10);
-            updateCountdown();
+        function setAllDigits(value) {
+            document.querySelectorAll('.cyfra').forEach(digit => {
+                digit.textContent = value;
+            });
         }
         
-        window.addEventListener('load', startCountdown);
-        setTimeout(startCountdown, 100);
+        const timer = setInterval(updateClock, 10);
+        updateClock();
         
         function adjustSize() {
-            const display = document.querySelector('.digital-display');
-            const displayWidth = display.scrollWidth;
-            const containerWidth = display.parentElement.offsetWidth;
-            const screenWidth = window.innerWidth;
+            const ekran = document.querySelector('.ekran');
+            const cyfry = document.querySelector('.cyfry');
+            const ekranWidth = ekran.offsetWidth;
+            const cyfryWidth = cyfry.scrollWidth;
             
-            if (displayWidth > containerWidth * 0.95) {
-                const currentSize = parseFloat(getComputedStyle(display).fontSize);
-                const scaleFactor = (containerWidth * 0.9) / displayWidth;
-                const newSize = Math.min(currentSize * 0.95, currentSize * scaleFactor);
-                display.style.fontSize = newSize + 'px';
+            if (cyfryWidth > ekranWidth * 0.95) {
+                const currentSize = parseFloat(getComputedStyle(cyfry).fontSize);
+                const newSize = currentSize * 0.95;
+                cyfry.style.fontSize = newSize + 'px';
                 
-                const msSize = newSize * 0.45;
-                document.querySelector('.milliseconds').style.fontSize = msSize + 'px';
-                document.querySelector('.dot').style.fontSize = (newSize * 0.6) + 'px';
-            }
-            
-            if (screenWidth < 400) {
-                display.style.padding = '8px 10px';
+                const msElements = document.querySelectorAll('.milisekundy .cyfra');
+                const msSize = newSize * 0.35;
+                msElements.forEach(ms => {
+                    ms.style.fontSize = msSize + 'px';
+                });
+                
+                const dotSize = newSize * 0.5;
+                document.querySelector('.kropka').style.fontSize = dotSize + 'px';
             }
         }
         
         window.addEventListener('resize', adjustSize);
         setTimeout(adjustSize, 500);
-        
-        setInterval(() => {
-            const brightness = 0.95 + Math.random() * 0.1;
-            display.style.filter = `brightness(${brightness})`;
-        }, 3000);
+        setTimeout(adjustSize, 1000);
     </script>
 </body>
 </html>
