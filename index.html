@@ -14,7 +14,7 @@
         
         body {
             background: #000000;
-            color: #00ff00;
+            color: #ffffff;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -24,65 +24,58 @@
             overflow: hidden;
         }
         
-        /* KONTENER - ZAWSZE W JEDNEJ LINII */
+        /* KONTENER - FIXED, BEZ PRZEWIJANIA */
         .clock-container {
             width: 100%;
             text-align: center;
-            white-space: nowrap; /* ZABLOKUJ ZAWIJANIE */
-            overflow-x: auto; /* POZWÓŁ NA PRZEWIJANIE POZIOME */
-            overflow-y: hidden;
+            white-space: nowrap;
+            overflow: hidden;
             padding: 10px 0;
         }
         
-        /* HACK dla WebKit - ukryj paski przewijania ale zachowaj funkcjonalność */
-        .clock-container::-webkit-scrollbar {
-            display: none;
-        }
-        
-        /* ZEGAR - ZAWSZE W JEDNEJ LINII */
+        /* ZEGAR - KOMPAKTOWY, ZAWSZE W LINII */
         .digital-clock {
-            display: inline-block; /* ZAWSZE W LINII */
+            display: inline-flex; /* UŻYJ FLEX DLA LEPSZEJ KONTROLI */
+            align-items: baseline;
             font-family: 'Courier New', monospace;
-            font-size: 8vw; /* ROZMIAR WZGLĘDEM SZEROKOŚCI EKRANU */
+            font-size: clamp(2.5rem, 8vw, 6rem); /* MIN, IDEAL, MAX */
             font-weight: bold;
-            color: #00ff00;
-            letter-spacing: 0.5vw;
+            color: #ffffff; /* BIAŁY KOLOR */
             line-height: 1;
             text-shadow: 
-                0 0 1vw #00ff00,
-                0 0 2vw #00ff00,
-                0 0 3vw #00ff00;
-            padding: 2vw;
+                0 0 10px #ffffff,
+                0 0 20px #ffffff;
+            padding: 10px;
             background: rgba(0, 0, 0, 0.8);
-            border-radius: 1vw;
-            min-width: min-content; /* NIE DZIEL NA LINIE */
+            border-radius: 10px;
+            white-space: nowrap;
+            flex-wrap: nowrap; /* NIGDY SIĘ NIE ZAWIJA */
         }
         
         /* SEPARATORY */
         .separator {
-            color: #00ff00;
+            color: #ffffff;
             animation: blink 1s infinite;
-            display: inline-block;
+            margin: 0 2px;
         }
         
-        /* MILISEKUNDY - W TEJ SAMEJ LINII */
+        /* MILISEKUNDY - KOMPAKTOWE */
         .milliseconds {
-            font-size: 3vw;
-            color: #00ff00;
-            display: inline-block;
-            letter-spacing: 0.3vw;
+            font-size: 0.5em; /* 50% wielkości głównej czcionki */
+            color: #ffffff;
+            letter-spacing: 1px;
             text-shadow: 
-                0 0 0.5vw #00ff00,
-                0 0 1vw #00ff00;
+                0 0 5px #ffffff,
+                0 0 10px #ffffff;
+            margin-left: 2px;
         }
         
         /* KROPKA PRZED MILISEKUNDAMI */
         .dot {
-            color: #00ff00;
-            font-size: 3vw;
-            display: inline-block;
-            margin: 0 0.5vw;
-            text-shadow: 0 0 0.5vw #00ff00;
+            color: #ffffff;
+            font-size: 0.5em;
+            margin: 0 1px;
+            text-shadow: 0 0 5px #ffffff;
         }
         
         /* ANIMACJE */
@@ -92,119 +85,95 @@
         }
         
         @keyframes glow {
-            0%, 100% { text-shadow: 0 0 1vw #00ff00, 0 0 2vw #00ff00; }
-            50% { text-shadow: 0 0 2vw #00ff00, 0 0 4vw #00ff00, 0 0 6vw #00ff00; }
+            0%, 100% { text-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff; }
+            50% { text-shadow: 0 0 15px #ffffff, 0 0 30px #ffffff, 0 0 45px #ffffff; }
         }
         
         .digital-clock {
             animation: glow 3s infinite;
         }
         
-        /* STYLE DLA DUŻYCH EKRANÓW */
-        @media (min-width: 1200px) {
-            .digital-clock {
-                font-size: 6rem;
-                letter-spacing: 1rem;
-                padding: 1.5rem;
-            }
-            .milliseconds {
-                font-size: 2rem;
-                letter-spacing: 0.2rem;
-            }
-            .dot {
-                font-size: 2rem;
-            }
-        }
-        
-        /* STYLE DLA TABLETÓW */
-        @media (max-width: 768px) and (min-width: 481px) {
-            .digital-clock {
-                font-size: 7vw;
-                letter-spacing: 0.6vw;
-            }
-            .milliseconds {
-                font-size: 2.5vw;
-            }
-            .dot {
-                font-size: 2.5vw;
-            }
-        }
-        
-        /* STYLE DLA TELEFONÓW - NAJWAŻNIEJSZE */
+        /* TELEFONY - OPTYMALIZACJA */
         @media (max-width: 480px) {
             body {
                 padding: 5px;
             }
             
             .digital-clock {
-                font-size: 9vw; /* WIĘKSZE NA TELEFONACH */
-                letter-spacing: 0.4vw;
-                padding: 3vw;
-                white-space: nowrap; /* ZAWSZE W LINII */
-                display: inline-block;
+                font-size: clamp(1.8rem, 7vw, 3rem); /* MNIEJSZE NA TELEFONACH */
+                padding: 8px;
+                transform: scale(0.95); /* LEKKIE POMNIEJSZENIE */
+                transform-origin: center;
             }
             
-            .milliseconds {
-                font-size: 3.5vw;
-                letter-spacing: 0.2vw;
+            .separator {
+                margin: 0 1px;
             }
             
-            .dot {
-                font-size: 3.5vw;
-            }
-            
-            /* ZAPEWNIJ ŻE NIE BĘDZIE ZAWIJAĆ */
+            /* SPRAWDŹ CZY SIĘ MIESCI */
             .clock-container {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch; /* PŁYNNE PRZEWIJANIE NA IOS */
+                position: relative;
+            }
+            
+            /* JEŚLI ZA DUŻE, ZMNIEJSZ DYNAMICZNIE */
+            @media (max-width: 380px) {
+                .digital-clock {
+                    font-size: clamp(1.5rem, 6vw, 2.5rem);
+                    transform: scale(0.9);
+                }
+            }
+            
+            @media (max-width: 320px) {
+                .digital-clock {
+                    font-size: clamp(1.2rem, 5vw, 2rem);
+                    transform: scale(0.85);
+                }
             }
         }
         
-        /* STYLE DLA BARDZO MAŁYCH TELEFONÓW */
-        @media (max-width: 360px) {
+        /* TABLETY */
+        @media (min-width: 481px) and (max-width: 768px) {
             .digital-clock {
-                font-size: 10vw;
-                letter-spacing: 0.3vw;
-            }
-            
-            .milliseconds {
-                font-size: 4vw;
-            }
-            
-            .dot {
-                font-size: 4vw;
+                font-size: clamp(2.5rem, 6vw, 4rem);
             }
         }
         
-        /* STYLE DORIENTACJI POZIOMEJ */
-        @media (orientation: landscape) and (max-height: 600px) {
+        /* KOMPUTERY */
+        @media (min-width: 769px) {
             .digital-clock {
-                font-size: 5vw;
+                font-size: clamp(3rem, 5vw, 6rem);
             }
-            
-            .milliseconds {
-                font-size: 2vw;
+        }
+        
+        /* ORIENTACJA POZIOMA NA TELEFONIE */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .digital-clock {
+                font-size: clamp(1.5rem, 4vw, 3rem);
+                transform: scale(0.8);
             }
-            
-            .dot {
-                font-size: 2vw;
-            }
+        }
+        
+        /* NAPRAWA DLA BARDZO WĄSKICH EKRANÓW */
+        .time-part {
+            display: inline-block;
+            min-width: 2ch; /* MINIMUM 2 ZNAKI */
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="clock-container">
-        <!-- ZEGAR - ZAWSZE W JEDNEJ LINII -->
-        <div class="digital-clock">
-            <span id="days">00</span>
+        <!-- ZEGAR - FLEX DLA LEPSZEJ KONTROLI -->
+        <div class="digital-clock" id="digital-clock">
+            <span class="time-part" id="days">00</span>
             <span class="separator">:</span>
-            <span id="hours">00</span>
+            <span class="time-part" id="hours">00</span>
             <span class="separator">:</span>
-            <span id="minutes">00</span>
+            <span class="time-part" id="minutes">00</span>
             <span class="separator">:</span>
-            <span id="seconds">00</span>
+            <span class="time-part" id="seconds">00</span>
             <span class="dot">.</span>
-            <span class="milliseconds" id="milliseconds">000</span>
+            <span class="milliseconds time-part" id="milliseconds">000</span>
         </div>
     </div>
 
@@ -227,6 +196,7 @@
         const minutesElement = document.getElementById('minutes');
         const secondsElement = document.getElementById('seconds');
         const millisecondsElement = document.getElementById('milliseconds');
+        const digitalClock = document.getElementById('digital-clock');
         
         // ============================================
         // FUNKCJE POMOCNICZE
@@ -240,6 +210,49 @@
             if (num < 10) return '00' + num;
             if (num < 100) return '0' + num;
             return num;
+        }
+        
+        // ============================================
+        // FUNKCJA DOSTOSOWUJĄCA ROZMIAR
+        // ============================================
+        
+        function adjustClockSize() {
+            const container = document.querySelector('.clock-container');
+            const clock = document.querySelector('.digital-clock');
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            
+            // Sprawdź szerokość zegara
+            const clockWidth = clock.offsetWidth;
+            const containerWidth = container.offsetWidth;
+            
+            console.log('Szerokość ekranu:', screenWidth, 'px');
+            console.log('Szerokość zegara:', clockWidth, 'px');
+            
+            // Jeśli zegar jest za szeroki, zmniejsz go
+            if (clockWidth > screenWidth * 0.95) {
+                // Oblicz potrzebną skalę
+                const scale = (screenWidth * 0.9) / clockWidth;
+                
+                // Zastosuj skalowanie
+                clock.style.transform = `scale(${Math.min(scale, 1)})`;
+                console.log('Zmniejszono zegar do skali:', scale);
+            } else {
+                // Resetuj skalowanie jeśli się mieści
+                clock.style.transform = 'scale(1)';
+            }
+            
+            // Dostosuj dla bardzo małych ekranów
+            if (screenWidth < 400) {
+                // Zmniejsz odstępy
+                const separators = document.querySelectorAll('.separator');
+                separators.forEach(sep => {
+                    sep.style.margin = '0 1px';
+                });
+                
+                // Zmniejsz padding zegara
+                clock.style.padding = '5px';
+            }
         }
         
         // ============================================
@@ -262,10 +275,9 @@
                 millisecondsElement.textContent = '000';
                 
                 // Zmień kolor na czerwony
-                const clock = document.querySelector('.digital-clock');
-                clock.style.color = '#ff0000';
-                clock.style.textShadow = 
-                    '0 0 1vw #ff0000, 0 0 2vw #ff0000, 0 0 3vw #ff0000';
+                digitalClock.style.color = '#ff0000';
+                digitalClock.style.textShadow = 
+                    '0 0 10px #ff0000, 0 0 20px #ff0000';
                 
                 document.querySelectorAll('.separator').forEach(el => {
                     el.style.color = '#ff0000';
@@ -327,45 +339,24 @@
         updateCountdown();
         
         // ============================================
-        // AUTOMATYCZNE DOSTOSOWANIE DO EKRANU
+        // OBSŁUGA RESPONSYWNOŚCI
         // ============================================
         
-        function adjustForScreen() {
-            const clock = document.querySelector('.digital-clock');
-            const container = document.querySelector('.clock-container');
-            const screenWidth = window.innerWidth;
-            
-            // Na bardzo wąskich ekranach zmniejszamy odstępy
-            if (screenWidth < 400) {
-                clock.style.letterSpacing = '0.2vw';
-                document.querySelector('.milliseconds').style.letterSpacing = '0.1vw';
-            } else {
-                clock.style.letterSpacing = '0.5vw';
-                document.querySelector('.milliseconds').style.letterSpacing = '0.3vw';
-            }
-            
-            // Sprawdź czy zawartość mieści się w ekranie
-            const clockWidth = clock.offsetWidth;
-            
-            if (clockWidth > screenWidth * 0.95) {
-                // Jeśli za szerokie, zmniejsz czcionkę
-                const currentSize = parseFloat(getComputedStyle(clock).fontSize);
-                const newSize = currentSize * 0.95;
-                clock.style.fontSize = newSize + 'px';
-                
-                // Dostosuj też milisekundy
-                const ms = document.querySelector('.milliseconds');
-                const msCurrentSize = parseFloat(getComputedStyle(ms).fontSize);
-                const msNewSize = msCurrentSize * 0.95;
-                ms.style.fontSize = msNewSize + 'px';
-                document.querySelector('.dot').style.fontSize = msNewSize + 'px';
-            }
-        }
+        // Dostosuj rozmiar przy ładowaniu
+        window.addEventListener('load', () => {
+            adjustClockSize();
+            // Dodatkowe dostosowanie po krótkim opóźnieniu
+            setTimeout(adjustClockSize, 100);
+        });
         
-        // Wywołaj przy ładowaniu i zmianie rozmiaru
-        window.addEventListener('load', adjustForScreen);
-        window.addEventListener('resize', adjustForScreen);
-        window.addEventListener('orientationchange', adjustForScreen);
+        // Dostosuj przy zmianie rozmiaru
+        window.addEventListener('resize', adjustClockSize);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(adjustClockSize, 300);
+        });
+        
+        // Dostosuj po każdej aktualizacji czasu (co sekundę)
+        setInterval(adjustClockSize, 1000);
         
         // ============================================
         // DODATKOWE EFEKTY
@@ -373,15 +364,14 @@
         
         // Losowe zmiany jasności
         setInterval(() => {
-            const clock = document.querySelector('.digital-clock');
             const brightness = 0.9 + Math.random() * 0.2;
-            clock.style.filter = `brightness(${brightness})`;
+            digitalClock.style.filter = `brightness(${brightness})`;
         }, 3000);
         
         // ============================================
         // DEBUG
         // ============================================
-        console.log('ZEGAR W JEDNEJ LINII: AKTYWNY');
+        console.log('ZEGAR BIAŁY - JEDNA LINIA: AKTYWNY');
         console.log('Czas docelowy:', targetDate.toLocaleString());
         console.log('Szerokość ekranu:', window.innerWidth + 'px');
     </script>
