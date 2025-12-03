@@ -143,43 +143,9 @@
                 font-size: clamp(1.5rem, 5vw, 2.5rem);
             }
         }
-        
-        /* INFORMACJA DEBUG */
-        .debug-info {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            padding: 5px 10px;
-            font-size: 0.8rem;
-            border-radius: 5px;
-            display: none; /* DOMYŚLNIE UKRYTE */
-        }
-        
-        /* PRZYCISK TESTU */
-        .test-button {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            background: #ffffff;
-            color: #000000;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        
-        .test-button:hover {
-            background: #cccccc;
-        }
     </style>
 </head>
 <body>
-    <!-- PRZYCISK TESTU -->
-    <button class="test-button" onclick="testJavaScript()">Test JS</button>
-    
     <!-- ZEGAR -->
     <div class="container">
         <div class="digital-clock">
@@ -196,44 +162,20 @@
             </div>
         </div>
     </div>
-    
-    <!-- INFO DEBUG -->
-    <div class="debug-info" id="debug-info"></div>
 
     <script>
         // ============================================
-        // TEST JAVASCRIPT
+        // KONFIGURACJA - 14 DNI
         // ============================================
         
-        function testJavaScript() {
-            const debug = document.getElementById('debug-info');
-            debug.style.display = 'block';
-            debug.innerHTML = `
-                JavaScript działa!<br>
-                Data: ${new Date().toLocaleString()}<br>
-                Przeglądarka: ${navigator.userAgent}
-            `;
-            
-            // Test odliczania
-            document.getElementById('seconds').textContent = '59';
-            document.getElementById('milliseconds').textContent = '999';
-            
-            setTimeout(() => {
-                debug.innerHTML += '<br>Test zakończony pomyślnie!';
-            }, 1000);
-        }
-        
-        // ============================================
-        // KONFIGURACJA
-        // ============================================
-        
-        // Ustaw czas odliczania: 1 minuta od teraz (dla testu)
+        // Ustaw czas odliczania: 14 dni od teraz
         const targetDate = new Date();
-        targetDate.setMinutes(targetDate.getMinutes() + 1);
+        targetDate.setDate(targetDate.getDate() + 14); // 14 dni
+        targetDate.setHours(23, 59, 59, 999); // Do końca dnia
         
-        console.log('ZEGAR INICJALIZACJA');
-        console.log('Czas teraz:', new Date().toLocaleTimeString());
-        console.log('Czas docelowy:', targetDate.toLocaleTimeString());
+        console.log('ZEGAR INICJALIZACJA - 14 DNI');
+        console.log('Czas startu:', new Date().toLocaleString());
+        console.log('Czas docelowy:', targetDate.toLocaleString());
         
         // ============================================
         // ELEMENTY DOM
@@ -267,10 +209,6 @@
             const now = new Date();
             const timeLeft = targetDate.getTime() - now.getTime();
             
-            // Debug
-            const debug = document.getElementById('debug-info');
-            debug.innerHTML = `Pozostało: ${timeLeft}ms`;
-            
             // Jeśli czas minął
             if (timeLeft <= 0) {
                 console.log('Czas minął!');
@@ -283,10 +221,17 @@
                 secondsElement.textContent = '00';
                 millisecondsElement.textContent = '000';
                 
-                // Zmień kolor na zielony
-                document.querySelector('.time-display').style.color = '#00ff00';
+                // Zmień kolor na czerwony
+                document.querySelector('.time-display').style.color = '#ff0000';
                 document.querySelector('.time-display').style.textShadow = 
-                    '0 0 10px #00ff00, 0 0 20px #00ff00';
+                    '0 0 10px #ff0000, 0 0 20px #ff0000';
+                
+                document.querySelectorAll('.separator').forEach(el => {
+                    el.style.color = '#ff0000';
+                });
+                
+                document.querySelector('.milliseconds').style.color = '#ff0000';
+                document.querySelector('.dot').style.color = '#ff0000';
                 
                 // Przekieruj po 3 sekundach
                 setTimeout(() => {
@@ -302,8 +247,6 @@
             const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
             const milliseconds = Math.floor(timeLeft % 1000);
-            
-            console.log(`Czas: ${days}d ${hours}h ${minutes}m ${seconds}s ${milliseconds}ms`);
             
             // Zaktualizuj wyświetlacz
             daysElement.textContent = formatNumber(days);
@@ -323,6 +266,13 @@
                     sep.style.opacity = '0.6';
                 });
             }
+            
+            // Efekt migania milisekund
+            if (milliseconds % 200 < 100) {
+                millisecondsElement.style.opacity = '0.9';
+            } else {
+                millisecondsElement.style.opacity = '1';
+            }
         }
         
         // ============================================
@@ -330,15 +280,13 @@
         // ============================================
         
         // Sprawdź czy JavaScript działa
-        console.log('JavaScript działa!');
-        document.getElementById('debug-info').textContent = 'JavaScript aktywny';
-        document.getElementById('debug-info').style.display = 'block';
+        console.log('JavaScript działa! Rozpoczynam odliczanie 14 dni...');
         
         // Uruchom zegar
         let countdownInterval;
         
         function startCountdown() {
-            console.log('Uruchamiam odliczanie...');
+            console.log('Uruchamiam odliczanie 14 dni...');
             
             // Zatrzymaj istniejący interval jeśli jest
             if (countdownInterval) {
@@ -350,18 +298,13 @@
             
             // Pierwsze wywołanie
             updateCountdown();
-            
-            // Pokaż komunikat
-            document.getElementById('debug-info').innerHTML = 
-                'Odliczanie uruchomione!<br>' +
-                'Docelowy czas: ' + targetDate.toLocaleTimeString();
         }
         
         // Start przy załadowaniu strony
         window.addEventListener('load', startCountdown);
         
-        // Ręczny start
-        setTimeout(startCountdown, 1000);
+        // Ręczny start po 100ms
+        setTimeout(startCountdown, 100);
         
         // ============================================
         // DOSTOSOWANIE ROZMIARU
@@ -376,15 +319,11 @@
             const textWidth = display.scrollWidth;
             const containerWidth = clock.offsetWidth;
             
-            console.log('Szerokość tekstu:', textWidth, 'px');
-            console.log('Szerokość kontenera:', containerWidth, 'px');
-            
             // Jeśli tekst jest za szeroki, zmniejsz czcionkę
             if (textWidth > containerWidth * 0.9) {
                 const currentSize = parseFloat(getComputedStyle(display).fontSize);
                 const newSize = currentSize * 0.9;
                 display.style.fontSize = newSize + 'px';
-                console.log('Zmniejszono czcionkę do:', newSize, 'px');
             }
             
             // Dla bardzo małych ekranów
@@ -399,25 +338,24 @@
         setTimeout(adjustSize, 500);
         
         // ============================================
-        // AUTOMATYCZNY TEST
+        // TEST POPRAWNOŚCI DZIAŁANIA
         // ============================================
         
         // Test po 2 sekundach
         setTimeout(() => {
-            const seconds = document.getElementById('seconds').textContent;
-            if (seconds === '00') {
-                console.log('UWAGA: Zegar nie liczy!');
-                document.getElementById('debug-info').innerHTML = 
-                    'BŁĄD: Zegar nie liczy czasu<br>' +
-                    'Sprawdź czy JavaScript jest włączony<br>' +
-                    'Spróbuj kliknąć przycisk "Test JS"';
-                document.getElementById('debug-info').style.color = '#ff0000';
-                document.getElementById('debug-info').style.background = 'rgba(255, 0, 0, 0.2)';
+            const days = parseInt(daysElement.textContent);
+            const seconds = parseInt(secondsElement.textContent);
+            
+            if (days === 13 && seconds < 59) {
+                console.log('OK: Zegar działa poprawnie - liczy 14 dni');
+            } else if (days === 0 && seconds === 0) {
+                console.log('UWAGA: Sprawdź czy JavaScript jest włączony w przeglądarce');
             } else {
-                console.log('OK: Zegar działa poprawnie');
-                document.getElementById('debug-info').innerHTML = 
-                    'OK: Zegar działa<br>' +
-                    'Liczy czas poprawnie';
+                console.log('OK: Zegar działa - obecny czas:', 
+                    daysElement.textContent + 'd ' + 
+                    hoursElement.textContent + 'h ' + 
+                    minutesElement.textContent + 'm ' + 
+                    secondsElement.textContent + 's');
             }
         }, 2000);
         
