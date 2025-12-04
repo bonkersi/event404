@@ -243,7 +243,7 @@
         
         <div class="clock-container">
             <div class="time-unit">
-                <div class="time-value" id="days">00</div>
+                <div class="time-value" id="days">30</div>
                 <div class="time-label">Dni</div>
             </div>
             
@@ -278,15 +278,10 @@
     </div>
 
     <script>
-        // STAŁA DATA STARTU STRONY DOCELOWEJ
-        // Ustaw tutaj dokładną datę i godzinę kiedy strona ma ruszyć
-        // Format: rok, miesiąc (0-11), dzień, godzina, minuta, sekunda
-        const launchDate = new Date(2025, 2, 15, 12, 0, 0); // 15 marca 2025, 12:00:00
-        
-        // Jeśli chcesz ustawić 30 dni od dzisiaj o tej samej godzinie:
-        // const launchDate = new Date();
-        // launchDate.setDate(launchDate.getDate() + 30);
-        // launchDate.setHours(12, 0, 0, 0); // Ustaw na 12:00:00
+        // STAŁA DATA STARTU - 30 DNI OD TERAZ O GODZINIE 12:00:00
+        const launchDate = new Date();
+        launchDate.setDate(launchDate.getDate() + 30);
+        launchDate.setHours(12, 0, 0, 0); // Ustaw na 12:00:00
         
         // Docelowy URL po zakończeniu odliczania
         const redirectUrl = "https://bonkersi.github.io/BialaJaskolka.pl/";
@@ -324,9 +319,15 @@
         // Inicjalne wywołanie
         updateCountdown();
         
-        // Zapisz aktualny czas do localStorage (opcjonalnie, dla debugowania)
-        localStorage.setItem('countdownStart', new Date().toISOString());
-        localStorage.setItem('countdownTarget', launchDate.toISOString());
+        // Wyświetl informację o dacie startu w konsoli
+        console.log('Strona docelowa uruchomi się:', launchDate.toLocaleString());
+        console.log('Bieżąca data:', new Date().toLocaleString());
+        console.log('Pozostało dni:', Math.floor((launchDate - new Date()) / (1000 * 60 * 60 * 24)));
+        
+        // Jeśli strona już powinna być dostępna, natychmiast przekieruj
+        if (new Date() >= launchDate) {
+            window.location.href = redirectUrl;
+        }
         
         // Obsługa responsywności - zapewnienie, że zegar zawsze się mieści
         function adjustClockSize() {
@@ -398,15 +399,6 @@
         
         // Automatyczne dostosowanie co sekundę
         setInterval(adjustClockSize, 1000);
-        
-        // Wyświetl informację o dacie startu w konsoli (dla debugowania)
-        console.log('Strona docelowa uruchomi się:', launchDate.toLocaleString());
-        console.log('Bieżąca data:', new Date().toLocaleString());
-        
-        // Jeśli strona już powinna być dostępna, natychmiast przekieruj
-        if (new Date() >= launchDate) {
-            window.location.href = redirectUrl;
-        }
     </script>
 </body>
 </html>
