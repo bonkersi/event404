@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odliczanie 14 dni</title>
+    <title>Odliczanie 14 dni - Styl cyfrowy</title>
     <style>
         * {
             margin: 0;
@@ -14,57 +14,108 @@
         body {
             background-color: #000;
             color: #fff;
-            font-family: 'Courier New', monospace;
+            font-family: 'Arial', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
-        }
-        
-        .countdown-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
             padding: 20px;
         }
         
-        .countdown {
+        .countdown-container {
+            width: 100%;
             display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            font-size: clamp(1.5rem, 8vw, 7rem);
-            font-weight: bold;
-            letter-spacing: 0.2em;
-            white-space: nowrap;
-            text-align: center;
+            justify-content: center;
+            align-items: center;
         }
         
-        .countdown-item {
-            margin: 0 0.05em;
+        .countdown-grid {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            gap: 5px;
+        }
+        
+        .digital-number {
+            font-family: 'Courier New', monospace;
+            font-weight: 900;
+            font-size: clamp(3rem, 15vw, 15rem);
+            color: #ffffff;
+            background-color: #111;
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            line-height: 1;
+        }
+        
+        .separator {
+            font-family: 'Courier New', monospace;
+            font-weight: 900;
+            font-size: clamp(3rem, 15vw, 15rem);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            padding-bottom: 15px;
+        }
+        
+        /* Dla małych ekranów */
+        @media (max-width: 768px) {
+            .countdown-grid {
+                gap: 3px;
+            }
+            
+            .digital-number {
+                padding: 10px 15px;
+            }
         }
         
         /* Dla bardzo małych ekranów */
         @media (max-width: 480px) {
-            .countdown {
-                font-size: 1.3rem;
-                letter-spacing: 0.1em;
+            .countdown-grid {
+                gap: 2px;
+            }
+            
+            .digital-number {
+                padding: 8px 10px;
+                font-size: 2.5rem;
+            }
+            
+            .separator {
+                font-size: 2.5rem;
+                padding-bottom: 10px;
             }
         }
         
         /* Dla ekstremalnie wąskich ekranów */
         @media (max-width: 320px) {
-            .countdown {
-                font-size: 1.1rem;
-                letter-spacing: 0.05em;
+            .countdown-grid {
+                gap: 1px;
+            }
+            
+            .digital-number {
+                padding: 6px 8px;
+                font-size: 2rem;
+            }
+            
+            .separator {
+                font-size: 2rem;
+                padding-bottom: 8px;
             }
         }
     </style>
 </head>
 <body>
     <div class="countdown-container">
-        <div class="countdown" id="countdown">
+        <div class="countdown-grid" id="countdown">
             <!-- Zegar będzie generowany przez JavaScript -->
         </div>
     </div>
@@ -78,43 +129,46 @@
             const now = new Date().getTime();
             const timeLeft = countdownDate - now;
             
-            // Obliczenia dni, godzin, minut, sekund i milisekund
+            // Jeśli czas minął
+            if (timeLeft < 0) {
+                document.getElementById("countdown").innerHTML = `
+                    <div class="digital-number">00</div>
+                    <div class="separator">:</div>
+                    <div class="digital-number">00</div>
+                    <div class="separator">:</div>
+                    <div class="digital-number">00</div>
+                    <div class="separator">:</div>
+                    <div class="digital-number">00</div>
+                `;
+                return;
+            }
+            
+            // Obliczenia dni, godzin, minut, sekund
             const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
             const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-            const milliseconds = Math.floor((timeLeft % 1000) / 10); // Pokazujemy tylko 2 cyfry milisekund
             
             // Formatowanie z zerami wiodącymi
-            const formatWithZero = (num, digits = 2) => {
-                return num.toString().padStart(digits, '0');
-            };
+            const formatWithZero = (num) => num < 10 ? `0${num}` : num;
             
-            // Aktualizacja wyświetlanego czasu - TYLKO LICZBY (bez separatorów)
+            // Aktualizacja wyświetlanego czasu
             document.getElementById("countdown").innerHTML = `
-                <span class="countdown-item">${formatWithZero(days)}</span>
-                <span class="countdown-item">${formatWithZero(hours)}</span>
-                <span class="countdown-item">${formatWithZero(minutes)}</span>
-                <span class="countdown-item">${formatWithZero(seconds)}</span>
-                <span class="countdown-item">${formatWithZero(milliseconds)}</span>
+                <div class="digital-number">${formatWithZero(days)}</div>
+                <div class="separator">:</div>
+                <div class="digital-number">${formatWithZero(hours)}</div>
+                <div class="separator">:</div>
+                <div class="digital-number">${formatWithZero(minutes)}</div>
+                <div class="separator">:</div>
+                <div class="digital-number">${formatWithZero(seconds)}</div>
             `;
-            
-            // Jeśli czas minął
-            if (timeLeft < 0) {
-                document.getElementById("countdown").innerHTML = 
-                    "<span class='countdown-item'>00</span>" +
-                    "<span class='countdown-item'>00</span>" +
-                    "<span class='countdown-item'>00</span>" +
-                    "<span class='countdown-item'>00</span>" +
-                    "<span class='countdown-item'>00</span>";
-            }
         }
         
         // Inicjalizacja odliczania
         updateCountdown();
         
-        // Aktualizacja co 10 milisekund dla płynnego odliczania
-        setInterval(updateCountdown, 10);
+        // Aktualizacja co sekundę
+        setInterval(updateCountdown, 1000);
     </script>
 </body>
 </html>
