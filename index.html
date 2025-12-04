@@ -12,170 +12,188 @@
         }
 
         body {
-            font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
-            background: #111;
-            color: #fff;
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #0f0;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden;
-            padding: 20px;
+            overflow: hidden;
+            padding: 0;
         }
 
-        .container {
+        .clock-container {
             width: 100%;
-            max-width: 1200px;
-            text-align: center;
-            padding: 20px;
-        }
-
-        h1 {
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            margin-bottom: 20px;
-            color: #fff;
-            font-weight: 300;
-            letter-spacing: 1px;
-        }
-
-        .timer-container {
-            background: #222;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 30px 20px;
-            width: 100%;
-            margin: 0 auto;
-        }
-
-        .display {
+            min-width: 100vw;
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 30px;
+            align-items: center;
+            background: #111;
+            padding: 20px 0;
         }
 
-        .unit-box {
+        .clock-display {
+            display: flex;
+            align-items: center;
             background: #000;
-            border: 1px solid #444;
-            border-radius: 4px;
-            padding: 20px 10px;
-            min-width: 120px;
-            flex: 1;
-            max-width: 200px;
-        }
-
-        .value {
-            font-size: clamp(2rem, 6vw, 3.5rem);
-            font-weight: 400;
-            color: #fff;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 1px;
-            line-height: 1;
-            margin-bottom: 5px;
+            border: 3px solid #333;
+            border-radius: 10px;
+            padding: 15px 20px;
+            box-shadow: 
+                inset 0 0 10px #000,
+                0 0 20px rgba(0, 255, 0, 0.1);
+            white-space: nowrap;
             font-variant-numeric: tabular-nums;
         }
 
-        .milliseconds .value {
-            color: #999;
-            font-size: clamp(1.8rem, 5vw, 3rem);
+        .time-unit {
+            display: inline-block;
+            text-align: center;
+            min-width: 60px;
         }
 
-        .unit {
-            font-size: clamp(0.9rem, 2vw, 1.1rem);
-            color: #aaa;
-            text-transform: uppercase;
+        .time-value {
+            font-size: 4rem;
+            font-weight: 700;
+            color: #0f0;
+            text-shadow: 0 0 5px #0f0;
+            line-height: 1;
             letter-spacing: 1px;
-            font-weight: 300;
+        }
+
+        .time-label {
+            font-size: 0.9rem;
+            color: #0a0;
+            text-transform: uppercase;
+            margin-top: 2px;
+            letter-spacing: 1px;
         }
 
         .separator {
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            color: #666;
-            align-self: center;
+            font-size: 3.5rem;
+            color: #0c0;
             margin: 0 5px;
-            font-family: 'Courier New', monospace;
+            line-height: 1;
         }
 
-        .info {
-            font-size: clamp(0.9rem, 2vw, 1rem);
-            color: #888;
-            margin-top: 20px;
-            line-height: 1.5;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+        .milliseconds {
+            color: #0f9;
+            min-width: 80px;
         }
 
-        .footer {
-            margin-top: 30px;
+        .milliseconds .time-value {
+            font-size: 3.5rem;
+        }
+
+        .milliseconds .time-label {
+            color: #090;
+        }
+
+        .info-bar {
+            position: fixed;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
             font-size: 0.8rem;
-            color: #555;
+            color: #080;
+            z-index: 100;
+            background: rgba(0, 20, 0, 0.8);
+            padding: 5px;
         }
 
+        /* Regulacja rozmiaru dla bardzo małych ekranów */
         @media (max-width: 768px) {
-            .display {
-                gap: 8px;
+            .time-value {
+                font-size: 3rem;
             }
-            .unit-box {
-                min-width: 90px;
-                padding: 15px 5px;
+            .milliseconds .time-value {
+                font-size: 2.8rem;
+            }
+            .separator {
+                font-size: 2.8rem;
+            }
+            .time-label {
+                font-size: 0.8rem;
+            }
+            .time-unit {
+                min-width: 50px;
+            }
+            .milliseconds {
+                min-width: 70px;
             }
         }
 
         @media (max-width: 480px) {
-            .unit-box {
-                min-width: 70px;
-                padding: 12px 3px;
+            .time-value {
+                font-size: 2.2rem;
             }
-            .value {
-                font-size: 1.8rem;
+            .milliseconds .time-value {
+                font-size: 2rem;
             }
             .separator {
-                font-size: 1.2rem;
+                font-size: 2rem;
+            }
+            .time-label {
+                font-size: 0.7rem;
+            }
+            .time-unit {
+                min-width: 40px;
+            }
+            .milliseconds {
+                min-width: 60px;
+            }
+        }
+
+        /* Zawsze w jednej linii - wymuszamy skalowanie */
+        @media (max-width: 360px) {
+            .clock-display {
+                transform: scale(0.9);
+                transform-origin: center;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .clock-display {
+                transform: scale(0.85);
+                transform-origin: center;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>ODLICZANIE 14 DNI</h1>
-        
-        <div class="timer-container">
-            <div class="display">
-                <div class="unit-box">
-                    <div class="value" id="days">14</div>
-                    <div class="unit">Dni</div>
-                </div>
-                <div class="separator">:</div>
-                <div class="unit-box">
-                    <div class="value" id="hours">23</div>
-                    <div class="unit">Godzin</div>
-                </div>
-                <div class="separator">:</div>
-                <div class="unit-box">
-                    <div class="value" id="minutes">59</div>
-                    <div class="unit">Minut</div>
-                </div>
-                <div class="separator">:</div>
-                <div class="unit-box">
-                    <div class="value" id="seconds">59</div>
-                    <div class="unit">Sekund</div>
-                </div>
-                <div class="separator">.</div>
-                <div class="unit-box milliseconds">
-                    <div class="value" id="milliseconds">999</div>
-                    <div class="unit">ms</div>
-                </div>
+    <div class="clock-container">
+        <div class="clock-display" id="clockDisplay">
+            <div class="time-unit">
+                <div class="time-value" id="days">14</div>
+                <div class="time-label">Dni</div>
             </div>
-            
-            <div class="info">
-                Odliczanie 14 dni (1 209 600 000 ms).<br>
-                Po zakończeniu automatyczne przekierowanie na stronę docelową.
+            <div class="separator">:</div>
+            <div class="time-unit">
+                <div class="time-value" id="hours">23</div>
+                <div class="time-label">Godz</div>
+            </div>
+            <div class="separator">:</div>
+            <div class="time-unit">
+                <div class="time-value" id="minutes">59</div>
+                <div class="time-label">Min</div>
+            </div>
+            <div class="separator">:</div>
+            <div class="time-unit">
+                <div class="time-value" id="seconds">59</div>
+                <div class="time-label">Sek</div>
+            </div>
+            <div class="separator">.</div>
+            <div class="time-unit milliseconds">
+                <div class="time-value" id="milliseconds">999</div>
+                <div class="time-label">ms</div>
             </div>
         </div>
-        
-        <div class="footer">Odliczanie co milisekundę</div>
+    </div>
+
+    <div class="info-bar" id="infoBar">
+        Odliczanie 14 dni do przekierowania | Aktualizacja: 1ms | Cel: bonkersi.github.io/BialaJaskolka.pl
     </div>
 
     <script>
@@ -193,6 +211,8 @@
         const minutesEl = document.getElementById('minutes');
         const secondsEl = document.getElementById('seconds');
         const millisecondsEl = document.getElementById('milliseconds');
+        const clockDisplay = document.getElementById('clockDisplay');
+        const infoBar = document.getElementById('infoBar');
 
         // Formatowanie liczby
         function formatNumber(num, length) {
@@ -209,6 +229,7 @@
                 diff = 0;
                 // Przekierowanie natychmiast po zakończeniu
                 window.location.href = TARGET_URL;
+                return;
             }
 
             // Oblicz jednostki czasu
@@ -224,34 +245,51 @@
             minutesEl.textContent = formatNumber(minutes, 2);
             secondsEl.textContent = formatNumber(seconds, 2);
             millisecondsEl.textContent = formatNumber(milliseconds, 3);
+
+            // Aktualizuj pasek informacyjny
+            const progress = ((TOTAL_MS - diff) / TOTAL_MS * 100).toFixed(2);
+            infoBar.textContent = `Odliczanie: ${days}d ${formatNumber(hours, 2)}h ${formatNumber(minutes, 2)}m ${formatNumber(seconds, 2)}s | Postęp: ${progress}% | Przekierowanie na: ${TARGET_URL.replace('https://', '')}`;
         }
 
-        // Inicjalizacja i uruchomienie interwału
-        updateCountdown();
-        const interval = setInterval(updateCountdown, 1);
-
-        // Responsywność - zabezpieczenie przed przycięciem
-        function adjustScale() {
-            const container = document.querySelector('.container');
-            const vw = window.innerWidth;
-            const containerWidth = container.scrollWidth;
+        // Funkcja dostosowująca rozmiar zegara do ekranu
+        function adjustClockSize() {
+            const containerWidth = window.innerWidth;
+            const clockWidth = clockDisplay.scrollWidth;
+            const minRequiredWidth = 600; // Minimalna szerokość dla pełnego wyświetlenia
             
-            if (containerWidth > vw) {
-                const scale = vw / containerWidth;
-                container.style.transform = `scale(${scale})`;
+            // Sprawdzamy czy zegar mieści się w oknie
+            if (clockWidth > containerWidth - 40) {
+                // Obliczamy skalę, która zmieści zegar
+                const scale = (containerWidth - 40) / clockWidth;
+                clockDisplay.style.transform = `scale(${Math.max(scale, 0.7)})`;
             } else {
-                container.style.transform = 'scale(1)';
+                clockDisplay.style.transform = 'scale(1)';
             }
         }
 
-        window.addEventListener('resize', adjustScale);
-        window.addEventListener('load', adjustScale);
-        setTimeout(adjustScale, 100);
-
-        // Zatrzymanie interwału przy opuszczeniu strony
+        // Inicjalizacja
+        updateCountdown();
+        
+        // Uruchomienie interwału
+        const interval = setInterval(updateCountdown, 1);
+        
+        // Dostosowanie rozmiaru na start
+        window.addEventListener('load', () => {
+            adjustClockSize();
+            // Dodatkowe sprawdzenie po załadowaniu fontów
+            setTimeout(adjustClockSize, 100);
+        });
+        
+        // Dostosowanie przy zmianie rozmiaru okna
+        window.addEventListener('resize', adjustClockSize);
+        
+        // Zabezpieczenie przed przeładowaniem
         window.addEventListener('beforeunload', () => {
             clearInterval(interval);
         });
+
+        // Uruchomienie funkcji dostosowującej na starcie
+        adjustClockSize();
     </script>
 </body>
 </html>
