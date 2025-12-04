@@ -3,333 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odliczanie 14 Dni</title>
+    <title>Odliczanie 14 dni</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: 'Arial', sans-serif;
-            background: #d0d0d0;
-            color: #000;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             overflow: hidden;
-            padding: 0;
         }
-
-        .clock-container {
-            width: 100%;
-            min-width: 100vw;
+        
+        .countdown-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #c0c0c0;
-            padding: 30px 0;
+            width: 100%;
+            padding: 20px;
         }
-
-        .clock-display {
+        
+        .countdown {
             display: flex;
-            align-items: center;
-            background: #111;
-            border: 6px solid #222;
-            border-radius: 15px;
-            padding: 25px 30px;
-            box-shadow: 
-                0 6px 20px rgba(0, 0, 0, 0.4),
-                inset 0 0 15px rgba(0, 0, 0, 0.8);
+            flex-direction: row;
+            flex-wrap: nowrap;
+            font-size: clamp(2rem, 10vw, 10rem);
+            font-weight: bold;
+            letter-spacing: 2px;
             white-space: nowrap;
-            font-variant-numeric: tabular-nums;
-        }
-
-        /* STYL SEGMENTOWYCH CYFR LCD */
-        .time-unit {
-            display: inline-block;
             text-align: center;
-            min-width: 80px;
         }
-
-        .lcd-digit {
-            font-family: 'LCD', 'Courier New', monospace;
-            font-size: 5.5rem;
-            font-weight: 700;
-            color: #fff;
-            line-height: 1;
-            letter-spacing: 1px;
-            text-shadow: 0 0 3px #fff, 0 0 5px #fff;
-            /* Symulacja segmentów LCD */
-            -webkit-font-smoothing: none;
-            -moz-osx-font-smoothing: grayscale;
-            font-smooth: never;
+        
+        .countdown-item {
+            margin: 0 0.05em;
         }
-
-        /* Alternatywa: użycie specjalnej czcionki LCD */
-        @font-face {
-            font-family: 'LCD';
-            src: local('Segment7Standard'), 
-                 url('https://fonts.cdnfonts.com/s/15327/Segment7Standard.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        .time-label {
-            font-size: 1.1rem;
-            color: #999;
-            text-transform: uppercase;
-            margin-top: 8px;
-            letter-spacing: 1.5px;
-            font-weight: 400;
-        }
-
+        
         .separator {
-            font-size: 4.5rem;
-            color: #fff;
-            margin: 0 15px;
-            line-height: 1;
-            font-weight: 300;
-            font-family: 'Arial', sans-serif;
+            margin: 0 0.05em;
+            font-weight: normal;
         }
-
-        .milliseconds {
-            min-width: 100px;
-        }
-
-        .milliseconds .lcd-digit {
-            font-size: 4.5rem;
-            color: #ddd;
-        }
-
-        .milliseconds .time-label {
-            color: #888;
-        }
-
-        /* Info */
-        .info {
-            position: fixed;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #555;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.95);
-            border-top: 1px solid #aaa;
-            font-family: 'Arial', sans-serif;
-        }
-
-        /* Regulacja rozmiaru */
-        @media (max-width: 1400px) {
-            .lcd-digit { font-size: 5rem; }
-            .separator { font-size: 4rem; }
-            .time-unit { min-width: 75px; }
-        }
-
-        @media (max-width: 1200px) {
-            .lcd-digit { font-size: 4.5rem; }
-            .separator { font-size: 3.5rem; }
-            .time-unit { min-width: 70px; }
-            .milliseconds .lcd-digit { font-size: 4rem; }
-            .milliseconds { min-width: 90px; }
-        }
-
-        @media (max-width: 992px) {
-            .lcd-digit { font-size: 4rem; }
-            .separator { font-size: 3rem; }
-            .time-unit { min-width: 65px; }
-            .milliseconds .lcd-digit { font-size: 3.5rem; }
-            .milliseconds { min-width: 85px; }
-            .time-label { font-size: 1rem; }
-        }
-
-        @media (max-width: 768px) {
-            .clock-display {
-                padding: 20px 25px;
-            }
-            .lcd-digit { font-size: 3.5rem; }
-            .separator { font-size: 2.8rem; margin: 0 10px; }
-            .time-unit { min-width: 60px; }
-            .milliseconds .lcd-digit { font-size: 3rem; }
-            .milliseconds { min-width: 80px; }
-            .time-label { font-size: 0.9rem; margin-top: 6px; }
-        }
-
-        @media (max-width: 576px) {
-            .clock-display {
-                padding: 18px 20px;
-                border-width: 4px;
-            }
-            .lcd-digit { font-size: 3rem; }
-            .separator { font-size: 2.5rem; margin: 0 8px; }
-            .time-unit { min-width: 55px; }
-            .milliseconds .lcd-digit { font-size: 2.6rem; }
-            .milliseconds { min-width: 75px; }
-            .time-label { font-size: 0.85rem; }
-        }
-
+        
+        /* Dla bardzo małych ekranów */
         @media (max-width: 480px) {
-            .clock-display {
-                padding: 15px 18px;
-                transform: scale(0.95);
-            }
-            .lcd-digit { font-size: 2.6rem; }
-            .separator { font-size: 2.2rem; margin: 0 6px; }
-            .time-unit { min-width: 50px; }
-            .milliseconds .lcd-digit { font-size: 2.3rem; }
-            .milliseconds { min-width: 70px; }
-            .time-label { font-size: 0.8rem; }
-        }
-
-        @media (max-width: 400px) {
-            .clock-display {
-                transform: scale(0.9);
+            .countdown {
+                font-size: 1.8rem;
             }
         }
-
-        @media (max-width: 360px) {
-            .clock-display {
-                transform: scale(0.85);
-                padding: 12px 15px;
-            }
-        }
-
+        
+        /* Dla ekstremalnie wąskich ekranów */
         @media (max-width: 320px) {
-            .clock-display {
-                transform: scale(0.8);
+            .countdown {
+                font-size: 1.4rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="clock-container">
-        <div class="clock-display" id="clockDisplay">
-            <div class="time-unit">
-                <div class="lcd-digit" id="days1">1</div>
-                <div class="lcd-digit" id="days2">4</div>
-                <div class="time-label">Dni</div>
-            </div>
-            <div class="separator">:</div>
-            <div class="time-unit">
-                <div class="lcd-digit" id="hours1">2</div>
-                <div class="lcd-digit" id="hours2">3</div>
-                <div class="time-label">Godz</div>
-            </div>
-            <div class="separator">:</div>
-            <div class="time-unit">
-                <div class="lcd-digit" id="minutes1">5</div>
-                <div class="lcd-digit" id="minutes2">9</div>
-                <div class="time-label">Min</div>
-            </div>
-            <div class="separator">:</div>
-            <div class="time-unit">
-                <div class="lcd-digit" id="seconds1">5</div>
-                <div class="lcd-digit" id="seconds2">9</div>
-                <div class="time-label">Sek</div>
-            </div>
-            <div class="separator">.</div>
-            <div class="time-unit milliseconds">
-                <div class="lcd-digit" id="ms1">9</div>
-                <div class="lcd-digit" id="ms2">9</div>
-                <div class="lcd-digit" id="ms3">9</div>
-                <div class="time-label">ms</div>
-            </div>
+    <div class="countdown-container">
+        <div class="countdown" id="countdown">
+            <!-- Zegar będzie generowany przez JavaScript -->
         </div>
     </div>
 
-    <div class="info">
-        Odliczanie 14 dni | Przekierowanie na: https://bonkersi.github.io/BialaJaskolka.pl/index.html
-    </div>
-
     <script>
-        // Konfiguracja
-        const TOTAL_DAYS = 14;
-        const TARGET_URL = "https://bonkersi.github.io/BialaJaskolka.pl/index.html";
-        const TOTAL_MS = TOTAL_DAYS * 24 * 60 * 60 * 1000;
-
-        // Czas końca (14 dni od teraz)
-        const endTime = new Date().getTime() + TOTAL_MS;
-
-        // Elementy DOM dla każdej cyfry osobno
-        const digits = {
-            days1: document.getElementById('days1'),
-            days2: document.getElementById('days2'),
-            hours1: document.getElementById('hours1'),
-            hours2: document.getElementById('hours2'),
-            minutes1: document.getElementById('minutes1'),
-            minutes2: document.getElementById('minutes2'),
-            seconds1: document.getElementById('seconds1'),
-            seconds2: document.getElementById('seconds2'),
-            ms1: document.getElementById('ms1'),
-            ms2: document.getElementById('ms2'),
-            ms3: document.getElementById('ms3')
-        };
-
-        // Aktualizacja odliczania
+        // Ustawienie czasu startowego - 14 dni od teraz
+        const countdownDate = new Date();
+        countdownDate.setDate(countdownDate.getDate() + 14);
+        
         function updateCountdown() {
             const now = new Date().getTime();
-            let diff = endTime - now;
-
-            if (diff <= 0) {
-                diff = 0;
-                window.location.href = TARGET_URL;
-                return;
-            }
-
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            const milliseconds = diff % 1000;
-
-            // Formatowanie do 2 cyfr z zerami wiodącymi
-            const daysStr = days.toString().padStart(2, '0');
-            const hoursStr = hours.toString().padStart(2, '0');
-            const minutesStr = minutes.toString().padStart(2, '0');
-            const secondsStr = seconds.toString().padStart(2, '0');
-            const msStr = milliseconds.toString().padStart(3, '0');
-
-            // Aktualizacja każdej cyfry osobno
-            digits.days1.textContent = daysStr[0];
-            digits.days2.textContent = daysStr[1];
-            digits.hours1.textContent = hoursStr[0];
-            digits.hours2.textContent = hoursStr[1];
-            digits.minutes1.textContent = minutesStr[0];
-            digits.minutes2.textContent = minutesStr[1];
-            digits.seconds1.textContent = secondsStr[0];
-            digits.seconds2.textContent = secondsStr[1];
-            digits.ms1.textContent = msStr[0];
-            digits.ms2.textContent = msStr[1];
-            digits.ms3.textContent = msStr[2];
-        }
-
-        // Dostosowanie rozmiaru
-        function adjustClockSize() {
-            const clockDisplay = document.getElementById('clockDisplay');
-            const containerWidth = window.innerWidth;
-            const clockWidth = clockDisplay.scrollWidth;
+            const timeLeft = countdownDate - now;
             
-            if (clockWidth > containerWidth - 40) {
-                const scale = (containerWidth - 40) / clockWidth;
-                clockDisplay.style.transform = `scale(${Math.max(scale, 0.7)})`;
-            } else {
-                clockDisplay.style.transform = 'scale(1)';
+            // Obliczenia dni, godzin, minut i sekund
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            
+            // Formatowanie z zerami wiodącymi
+            const formatWithZero = (num) => num < 10 ? `0${num}` : num;
+            
+            // Aktualizacja wyświetlanego czasu
+            document.getElementById("countdown").innerHTML = `
+                <span class="countdown-item">${formatWithZero(days)}</span>
+                <span class="separator">d</span>
+                <span class="countdown-item">${formatWithZero(hours)}</span>
+                <span class="separator">:</span>
+                <span class="countdown-item">${formatWithZero(minutes)}</span>
+                <span class="separator">:</span>
+                <span class="countdown-item">${formatWithZero(seconds)}</span>
+            `;
+            
+            // Jeśli czas minął
+            if (timeLeft < 0) {
+                document.getElementById("countdown").innerHTML = "Czas minął!";
             }
         }
-
-        // Inicjalizacja
+        
+        // Inicjalizacja odliczania
         updateCountdown();
-        const interval = setInterval(updateCountdown, 1);
         
-        window.addEventListener('load', adjustClockSize);
-        window.addEventListener('resize', adjustClockSize);
-        window.addEventListener('beforeunload', () => clearInterval(interval));
-        
-        adjustClockSize();
+        // Aktualizacja co sekundę
+        setInterval(updateCountdown, 1000);
     </script>
 </body>
 </html>
