@@ -77,33 +77,24 @@
         
         .time-value {
             font-family: 'Share Tech Mono', monospace;
-            font-size: clamp(24px, 6vw, 90px);
+            font-size: clamp(28px, 7vw, 110px);
             font-weight: 700;
             background: linear-gradient(180deg, #00ff9d 0%, #00cc7a 100%);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 0 20px rgba(0, 255, 157, 0.7);
+            text-shadow: 0 0 25px rgba(0, 255, 157, 0.8);
             line-height: 1;
             padding: 0 3px;
             margin: 0;
             letter-spacing: -1px;
         }
         
-        .time-label {
-            font-size: clamp(10px, 1.2vw, 16px);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-top: 8px;
-            color: #00ff9d;
-            text-shadow: 0 0 8px rgba(0, 255, 157, 0.5);
-        }
-        
         .separator {
             font-family: 'Share Tech Mono', monospace;
-            font-size: clamp(24px, 6vw, 90px);
+            font-size: clamp(28px, 7vw, 110px);
             color: #00ff9d;
-            text-shadow: 0 0 15px rgba(0, 255, 157, 0.7);
+            text-shadow: 0 0 20px rgba(0, 255, 157, 0.8);
             line-height: 1;
             margin: 0 2px;
             padding-bottom: 8px;
@@ -111,16 +102,16 @@
         }
         
         .separator-small {
-            font-size: clamp(18px, 4vw, 60px);
+            font-size: clamp(22px, 5vw, 80px);
             margin: 0 1px;
             padding-bottom: 5px;
             color: #00cc7a;
         }
         
         .milliseconds {
-            font-size: clamp(16px, 3vw, 50px);
+            font-size: clamp(20px, 4vw, 70px);
             color: #00cc7a;
-            text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+            text-shadow: 0 0 15px rgba(0, 255, 157, 0.7);
         }
         
         .scanline {
@@ -211,27 +202,19 @@
             .separator {
                 margin: 0;
             }
-            
-            .time-label {
-                margin-top: 5px;
-            }
         }
         
         @media screen and (max-width: 320px) {
             .time-value {
-                font-size: 22px;
+                font-size: 26px;
             }
             
             .separator {
-                font-size: 22px;
+                font-size: 26px;
             }
             
             .milliseconds {
-                font-size: 16px;
-            }
-            
-            .time-label {
-                font-size: 9px;
+                font-size: 20px;
             }
         }
     </style>
@@ -244,35 +227,30 @@
         <div class="clock-container">
             <div class="time-unit">
                 <div class="time-value" id="days">30</div>
-                <div class="time-label">Dni</div>
             </div>
             
             <div class="separator">:</div>
             
             <div class="time-unit">
                 <div class="time-value" id="hours">00</div>
-                <div class="time-label">Godzin</div>
             </div>
             
             <div class="separator">:</div>
             
             <div class="time-unit">
                 <div class="time-value" id="minutes">00</div>
-                <div class="time-label">Minut</div>
             </div>
             
             <div class="separator">:</div>
             
             <div class="time-unit">
                 <div class="time-value" id="seconds">00</div>
-                <div class="time-label">Sekund</div>
             </div>
             
             <div class="separator separator-small">.</div>
             
             <div class="time-unit">
                 <div class="time-value milliseconds" id="milliseconds">000</div>
-                <div class="time-label">Milisekund</div>
             </div>
         </div>
     </div>
@@ -352,49 +330,13 @@
             }
         }
         
-        // Dodatkowa funkcja do dynamicznego dostosowania czcionki
-        function adjustFontSize() {
-            const timeValues = document.querySelectorAll('.time-value:not(.milliseconds)');
-            const milliseconds = document.querySelector('.milliseconds');
-            const separators = document.querySelectorAll('.separator');
-            const container = document.querySelector('.container');
-            
-            if (!timeValues.length || !container) return;
-            
-            const containerWidth = container.clientWidth;
-            const clockContainer = document.querySelector('.clock-container');
-            const clockWidth = clockContainer.scrollWidth;
-            
-            // Jeśli zegar jest za szeroki, zmniejsz czcionkę
-            if (clockWidth > containerWidth * 0.9) {
-                const currentFontSize = parseFloat(window.getComputedStyle(timeValues[0]).fontSize);
-                const newFontSize = Math.max(currentFontSize * 0.9, 16); // Minimalna czcionka 16px
-                
-                timeValues.forEach(el => {
-                    if (!el.classList.contains('milliseconds')) {
-                        el.style.fontSize = `${newFontSize}px`;
-                    }
-                });
-                
-                separators.forEach(el => {
-                    el.style.fontSize = `${newFontSize}px`;
-                });
-                
-                if (milliseconds) {
-                    milliseconds.style.fontSize = `${newFontSize * 0.7}px`;
-                }
-            }
-        }
-        
         // Dostosuj po załadowaniu i przy zmianie rozmiaru okna
         window.addEventListener('load', function() {
             adjustClockSize();
-            adjustFontSize();
         });
         
         window.addEventListener('resize', function() {
             adjustClockSize();
-            adjustFontSize();
         });
         
         // Automatyczne dostosowanie co sekundę
