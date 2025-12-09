@@ -1,11 +1,14 @@
-<!-- Updated code with thinner, classic LED segments -->
 <!DOCTYPE html>
 <html lang="pl">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Odliczanie – LED Klasyczne</title>
+<title>Odliczanie</title>
 <style>
+* {
+  box-sizing: border-box;
+}
+
 body {
   background: #000;
   height: 100vh;
@@ -14,6 +17,7 @@ body {
   align-items: center;
   margin: 0;
   overflow: hidden;
+  min-width: 320px;
 }
 
 .display-wrapper {
@@ -21,18 +25,21 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 10px;
 }
 
 .led-display {
   display: flex;
   align-items: center;
   background: #0a0a0a;
-  padding: 20px 30px;
+  padding: 15px 20px;
   border-radius: 12px;
   border: 1px solid #333;
-  
-  overflow: visible;
+  min-width: min-content;
   white-space: nowrap;
+  flex-wrap: nowrap;
 }
 
 /* DIGIT */
@@ -40,7 +47,7 @@ body {
   position: relative;
   width: 70px;
   height: 120px;
-  margin: 0 10px;
+  margin: 0 8px;
   flex-shrink: 0;
   overflow: visible;
 }
@@ -164,8 +171,8 @@ body {
 
 .separator {
   color: #ff0000;
-  font-size: 80px;
-  margin: 0 15px;
+  font-size: 70px;
+  margin: 0 10px;
   font-weight: normal;
   opacity: 0.7;
   flex-shrink: 0;
@@ -173,16 +180,80 @@ body {
 
 .ms-dot {
   color: #ff0000;
-  font-size: 60px;
-  margin: 0 12px;
+  font-size: 50px;
+  margin: 0 8px;
   opacity: 0.7;
   flex-shrink: 0;
 }
 
-/* SAFE RESPONSIVE SCALING */
-@media (max-width: 900px) { .led-display { transform: scale(0.85); } }
-@media (max-width: 700px) { .led-display { transform: scale(0.70); } }
-@media (max-width: 500px) { .led-display { transform: scale(0.55); } }
+/* RESPONSIVE SCALING */
+@media (max-width: 1400px) {
+  .digit { width: 60px; height: 100px; margin: 0 6px; }
+  .seg.a, .seg.d, .seg.g { left: 10px; right: 10px; height: 10px; }
+  .seg.b, .seg.c, .seg.e, .seg.f { width: 10px; }
+  .seg.a { top: 0; }
+  .seg.d { top: 45px; }
+  .seg.g { bottom: 0; }
+  .seg.b, .seg.f { top: 5px; height: 45px; }
+  .seg.c, .seg.e { bottom: 5px; height: 45px; }
+  .separator { font-size: 60px; margin: 0 8px; }
+  .ms-dot { font-size: 45px; margin: 0 6px; }
+}
+
+@media (max-width: 1100px) {
+  .digit { width: 50px; height: 85px; margin: 0 5px; }
+  .seg.a, .seg.d, .seg.g { left: 8px; right: 8px; height: 8px; }
+  .seg.b, .seg.c, .seg.e, .seg.f { width: 8px; }
+  .seg.a { top: 0; }
+  .seg.d { top: 38px; }
+  .seg.g { bottom: 0; }
+  .seg.b, .seg.f { top: 4px; height: 38px; }
+  .seg.c, .seg.e { bottom: 4px; height: 38px; }
+  .separator { font-size: 50px; margin: 0 6px; }
+  .ms-dot { font-size: 35px; margin: 0 5px; }
+}
+
+@media (max-width: 900px) {
+  .digit { width: 40px; height: 70px; margin: 0 4px; }
+  .seg.a, .seg.d, .seg.g { left: 6px; right: 6px; height: 6px; }
+  .seg.b, .seg.c, .seg.e, .seg.f { width: 6px; }
+  .seg.a { top: 0; }
+  .seg.d { top: 32px; }
+  .seg.g { bottom: 0; }
+  .seg.b, .seg.f { top: 3px; height: 32px; }
+  .seg.c, .seg.e { bottom: 3px; height: 32px; }
+  .separator { font-size: 40px; margin: 0 5px; }
+  .ms-dot { font-size: 30px; margin: 0 4px; }
+  .led-display { padding: 10px 15px; }
+}
+
+@media (max-width: 700px) {
+  .digit { width: 32px; height: 55px; margin: 0 3px; }
+  .seg.a, .seg.d, .seg.g { left: 5px; right: 5px; height: 5px; }
+  .seg.b, .seg.c, .seg.e, .seg.f { width: 5px; }
+  .seg.a { top: 0; }
+  .seg.d { top: 25px; }
+  .seg.g { bottom: 0; }
+  .seg.b, .seg.f { top: 2px; height: 25px; }
+  .seg.c, .seg.e { bottom: 2px; height: 25px; }
+  .separator { font-size: 32px; margin: 0 4px; }
+  .ms-dot { font-size: 24px; margin: 0 3px; }
+  .led-display { padding: 8px 12px; }
+}
+
+@media (max-width: 500px) {
+  .digit { width: 26px; height: 45px; margin: 0 2px; }
+  .seg.a, .seg.d, .seg.g { left: 4px; right: 4px; height: 4px; }
+  .seg.b, .seg.c, .seg.e, .seg.f { width: 4px; }
+  .seg.a { top: 0; }
+  .seg.d { top: 20px; }
+  .seg.g { bottom: 0; }
+  .seg.b, .seg.f { top: 2px; height: 20px; }
+  .seg.c, .seg.e { bottom: 2px; height: 20px; }
+  .separator { font-size: 26px; margin: 0 3px; }
+  .ms-dot { font-size: 20px; margin: 0 2px; }
+  .led-display { padding: 6px 10px; }
+}
 </style>
 </head>
 <body>
@@ -228,6 +299,16 @@ const map = {
   '9': ['a','b','c','d','f','g']
 };
 
+// Ustaw datę docelową na 6 miesięcy od teraz
+const now = new Date();
+const END_DATE = new Date(now);
+END_DATE.setMonth(END_DATE.getMonth() + 6);
+
+console.log('Rozpoczęcie odliczania:', now.toLocaleString());
+console.log('Data końcowa (za 6 miesięcy):', END_DATE.toLocaleString());
+
+const REDIRECT_URL = 'https://bonkersi.github.io/BialaJaskolka.pl/index.html';
+
 function buildDigits(){
   document.querySelectorAll('.digit').forEach(d=>{
     ['a','b','c','d','e','f','g'].forEach(s=>{
@@ -248,23 +329,27 @@ function setDigit(id, num){
   });
 }
 
-const targetDate = new Date();
-targetDate.setMonth(targetDate.getMonth() + 6);
-
 function updateTimer(){
   const now = Date.now();
-  const diff = targetDate - now;
-  if(diff <= 0){
-    document.querySelectorAll('.digit').forEach(d=>setDigit(d.id,'8'));
+  const endTime = END_DATE.getTime();
+  
+  // Oblicz czas, który POZOSTAŁ do daty końcowej
+  const remaining = endTime - now;
+  
+  // Jeśli czas się skończył (remaining <= 0)
+  if(remaining <= 0){
+    // Czas minął - przekieruj
+    window.location.href = REDIRECT_URL;
     return;
   }
 
-  const totalSec = Math.floor(diff/1000);
+  // Oblicz pozostały czas (odliczanie w dół)
+  const totalSec = Math.floor(remaining / 1000);
   const days = Math.floor(totalSec / 86400);
-  const hours = Math.floor((totalSec % 86400)/3600);
-  const minutes = Math.floor((totalSec % 3600)/60);
+  const hours = Math.floor((totalSec % 86400) / 3600);
+  const minutes = Math.floor((totalSec % 3600) / 60);
   const seconds = totalSec % 60;
-  const ms = diff % 1000;
+  const ms = remaining % 1000;
 
   const pad = (n,l)=>String(n).padStart(l,'0');
 
@@ -286,6 +371,22 @@ function updateTimer(){
   setDigit("ms2", ms3[1]);
   setDigit("ms3", ms3[2]);
 }
+
+// Sprawdź czy czas już minął przy załadowaniu strony
+window.addEventListener('load', function() {
+  const now = Date.now();
+  const endTime = END_DATE.getTime();
+  const remaining = endTime - now;
+  
+  if (remaining <= 0) {
+    window.location.href = REDIRECT_URL;
+  }
+  
+  // Wyświetl informacje w konsoli dla debugowania
+  console.log('Data końcowa:', END_DATE.toLocaleString());
+  console.log('Aktualny czas:', new Date().toLocaleString());
+  console.log('Pozostało dni:', Math.floor(remaining / (1000 * 60 * 60 * 24)));
+});
 
 buildDigits();
 setInterval(updateTimer, 30);
